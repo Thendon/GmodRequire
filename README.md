@@ -6,7 +6,6 @@
   - example: Require( "classes/core/printer")
   - note: 
       - do NOT add any prefixes like cl_, sv_, sh_ or the .lua file ending
-      - 
       - Scince all files are included only one time it is recommended to save the return into alocal variable
 
   What it does:
