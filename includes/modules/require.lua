@@ -63,11 +63,11 @@ local function generateMeta( index )
 end
 
 local function handlePath( domain, path )
-    --include the file and save the return value
-    local incl = include( path )
-    --rebind the metatable of already required function
-    --to the new included once
+    --reserve pointer for domain ( or use existing one )
     required[domain] = required[domain] or {}
+    --finally include a disired file
+    local incl = include( path )
+    if ( !incl ) then return end
     --find last table without the generated metatable
     local tbl = required[domain]
     while ( getmetatable(tbl) ) do
@@ -78,7 +78,7 @@ local function handlePath( domain, path )
 end
 
 local function Require( domain )
-    --return already required code again
+    --return pointer of already required files
     if ( required[domain] ) then return required[domain] end
     --prepare string to be included
     local filename, folder = seperateFileAndFolder( domain .. ".lua" )
