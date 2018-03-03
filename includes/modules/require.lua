@@ -56,25 +56,22 @@ local function seperateFileAndFolder( path )
     return filename, folder
 end
 
-local function generateMeta( index )
+local function generateMeta( include )
     local meta = {}
-    meta.__index = index
+    meta.__index = include
     return meta
 end
 
 local function handlePath( domain, path )
-    --reserve pointer for domain ( or use existing one )
-    required[domain] = required[domain] or {}
     --finally include a disired file
     local incl = include( path )
+    --reserve pointer for domain ( or use existing one )
+    required[domain] = required[domain] or incl or {}
     if ( !incl ) then return end
-    --find last table without the generated metatable
-    local tbl = required[domain]
-    while ( getmetatable(tbl) ) do
-        tbl = getmetatable(required[domain]).__index
-    end
+    --return if found table is the included one
+    if ( required[domain] == incl ) then return end
     --generate metatable and link it with found table
-    setmetatable( tbl, generateMeta( incl ) )
+    setmetatable( required[domain], generateMeta( incl ) )
 end
 
 local function Require( domain )
